@@ -10,8 +10,6 @@ export class AuthService {
 
     async registerUser(UsersDto : registerUserDto){
 
-        console.log(UsersDto);
-
         const saltRounds = 10;
         const hash = await bcrypt.hash(UsersDto.password, saltRounds);
         //Logic for user register
@@ -23,8 +21,9 @@ export class AuthService {
             5.Send token in response
         */
 
+        const user = await this.userService.createUser({...UsersDto, password: hash});
 
-
-        return this.userService.createUser({...UsersDto, password: hash});
+        console.log(user);
+        return user
     }
 }

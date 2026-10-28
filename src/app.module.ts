@@ -19,7 +19,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       serviceId: 'sample-nest',
     }),
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_RUL as string),
+    MongooseModule.forRoot(process.env.MONGODB_URL as string),
     AuthModule,
     UserModule,
   ],
