@@ -13,6 +13,6 @@ export class AuthController {
     async register(@Body() UsersDto: registerUserDto){
 
         const token = await this.authService.registerUser(UsersDto);
-        return token;
+        return {access_token: token}
     }
 }
