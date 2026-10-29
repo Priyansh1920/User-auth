@@ -10,9 +10,9 @@ export class AuthController {
     // We make endpoints in controller, since we need auth endpoints so we will make this here
     // and we will put logic in service file 
     @Post('register')
-    register(@Body() UsersDto: registerUserDto){
+    async register(@Body() UsersDto: registerUserDto){
 
-        const result = this.authService.registerUser(UsersDto);
-        return result;
+        const token = await this.authService.registerUser(UsersDto);
+        return token;
     }
 }
