@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { UserModule } from './user/user.module.js';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { CourseModule } from './course/course.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -22,6 +23,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     MongooseModule.forRoot(process.env.MONGODB_URL as string),
     AuthModule,
     UserModule,
+    CourseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
