@@ -2,7 +2,7 @@ import { Body, Controller, Post, Get, Request, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service.js';
 import { registerUserDto } from './dto/registerUser.dto.js';
 import { loginUser } from './dto/loginUser.dto.js';
-// import { AuthGaurd } from './auth.gaurd.js';
+import { AuthGaurd } from './auth.gaurd.js';
 import { UserService } from '../user/user.service.js';
 @Controller('auth') // auth/register
 export class AuthController {
@@ -26,13 +26,18 @@ export class AuthController {
         return this.authService.login(userLogin);
     }
     
-    // @UseGuards(AuthGaurd)
-    // @Get('user')
-    // async getUser(@Request req){
-    //     const userId = req.user.id;
-    //     const user = await this.userService.findById(userId);
+    @UseGuards(AuthGaurd)
+    @Get('user')
+    async getUser(@Request() req: any){
+        const userId = req.user.id;
+        const user = await this.userService.findById(userId);
 
-    //     console.log(user);
-    //     return user;
-    // }
+        console.log(user);
+        return {
+            name: user?.fname,
+            surname: user?.lname,
+            email: user?.email,
+            role: user?.role
+        }
+    }
 }
