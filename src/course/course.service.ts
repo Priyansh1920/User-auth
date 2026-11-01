@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CourseDto } from './dto/create-course.dto.js';
 import { UpdateCourseDto } from './dto/update-course.dto.js';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,12 +19,16 @@ export class CourseService {
     })
   }
 
-  findAll() {
-    return `This action returns all course`;
+  async findAll() {
+    return await this.courseModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(name: string) {
+    const course = await this.courseModel.findOne({ name }).exec();
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+    return course;
   }
 
   update(id: number, updateCourseDto: UpdateCourseDto) {
