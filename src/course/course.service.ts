@@ -41,7 +41,11 @@ export class CourseService {
     return course;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(name: string) {
+    const course = await this.courseModel.findOneAndDelete({ name }).exec();
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+    return { message: 'Course deleted', name: course.name };
   }
 }
