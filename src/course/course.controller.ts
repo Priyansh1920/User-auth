@@ -20,13 +20,14 @@ export class CourseController {
   }
 
   @Get()
+  @UseGuards(AuthGaurd)
   findAll() {
     return this.courseService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.courseService.findOne(+id);
+  @Get(':name')
+  findOne(@Param('name') name: string) {
+    return this.courseService.findOne(name);
   }
 
   @Patch(':id')
