@@ -31,8 +31,14 @@ export class CourseService {
     return course;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(name: string, updateCourseDto: UpdateCourseDto) {
+    const course = await this.courseModel
+      .findOneAndUpdate({ name }, updateCourseDto, { new: true })
+      .exec();
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+    return course;
   }
 
   remove(id: number) {
