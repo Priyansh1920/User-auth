@@ -30,9 +30,11 @@ export class CourseController {
     return this.courseService.findOne(name);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.courseService.update(+id, updateCourseDto);
+  @Patch(':name')
+  @UseGuards(AuthGaurd)
+  @Roles(Role.STUDENT)
+  update(@Param('name') name: string, @Body() updateCourseDto: UpdateCourseDto) {
+    return this.courseService.update(name, updateCourseDto);
   }
 
   @Delete(':id')
