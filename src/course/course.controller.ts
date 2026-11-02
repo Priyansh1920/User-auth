@@ -26,20 +26,21 @@ export class CourseController {
   }
 
   @Get(':name')
+  @UseGuards(AuthGaurd)
   findOne(@Param('name') name: string) {
     return this.courseService.findOne(name);
   }
 
   @Patch(':name')
-  @UseGuards(AuthGaurd)
-  @Roles(Role.STUDENT)
+  @UseGuards(AuthGaurd, RolesGaurd)
+  @Roles(Role.ADMIN)
   update(@Param('name') name: string, @Body() updateCourseDto: UpdateCourseDto) {
     return this.courseService.update(name, updateCourseDto);
   }
 
   @Delete(':name')
   @UseGuards(AuthGaurd, RolesGaurd)
-  @Roles(Role.STUDENT)
+  @Roles(Role.ADMIN)
   remove(@Param('name') name: string) {
     return this.courseService.remove(name);
   }
