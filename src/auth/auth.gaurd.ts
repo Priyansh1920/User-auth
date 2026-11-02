@@ -7,7 +7,7 @@ import {
 
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
-type JwtPayload = { sub: string; email: string };
+type JwtPayload = { sub: string; email: string; role: string };
 type AuthRequest = Request & { user?: JwtPayload };
 
 @Injectable()
