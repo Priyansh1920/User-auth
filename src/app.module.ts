@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module.js';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { CourseModule } from './course/course.module.js';
+import { PurchaseModule } from './purchase/purchase.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -24,6 +25,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     AuthModule,
     UserModule,
     CourseModule,
+    PurchaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
