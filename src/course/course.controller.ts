@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { CourseService } from './course.service.js';
 import { CourseDto } from './dto/create-course.dto.js';
 import { UpdateCourseDto } from './dto/update-course.dto.js';
@@ -6,6 +6,7 @@ import { AuthGaurd } from '../auth/auth.gaurd.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { Role } from '../user/user.types.js';
 import { RolesGaurd } from '../auth/roles.gaurd.js';
+import { ListCourseQuerySto } from './dto/list-courses-query.dto.js';
 
 @Controller('courses')
 export class CourseController {
@@ -21,8 +22,8 @@ export class CourseController {
 
   @Get()
   @UseGuards(AuthGaurd)
-  findAll() {
-    return this.courseService.findAll();
+  findAll(@Query() query: ListCourseQuerySto) {
+    return this.courseService.findAll(query);
   }
 
   @Get(':name')
