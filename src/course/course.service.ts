@@ -4,11 +4,12 @@ import { UpdateCourseDto } from './dto/update-course.dto.js';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Course } from './schemas/course.schema.js';
+import { ListCourseQuerySto } from './dto/list-courses-query.dto.js';
 
 @Injectable()
 export class CourseService {
 
-  constructor(@InjectModel(Course.name) private courseModel: Model<Course>){}
+  constructor(@InjectModel(Course.name) private courseModel: Model<Course>) { }
 
   async create(createCourseDto: CourseDto) {
     return await this.courseModel.create({
@@ -19,8 +20,24 @@ export class CourseService {
     })
   }
 
-  async findAll() {
-    return await this.courseModel.find().exec();
+  async findAll(query: ListCourseQuerySto) {
+    const { page, limit } = query;
+    const skip = (page - 1) * limit;          // with offset: const skip = query.offset;
+
+    const [data, totalCount] = await Promise.all([
+      this.courseModel.find().sort({ _id: 1 }).skip(skip).limit(limit).exec(),  
+      this.courseModel.countDocuments().exec(),
+    ])
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        totalCount,
+        totalPages: Math.ceil(totalCount / limit),
+      }
+    }
   }
 
   async findOne(name: string) {
