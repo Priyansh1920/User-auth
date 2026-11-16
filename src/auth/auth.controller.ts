@@ -29,7 +29,7 @@ export class AuthController {
     @UseGuards(AuthGaurd)
     @Get('user')
     async getUser(@Request() req: any){
-        const userId = req.user.id;
+        const userId = req.user.sub;
         const user = await this.userService.findById(userId);
 
         console.log(user);
