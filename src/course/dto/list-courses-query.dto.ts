@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsInt, IsIn, IsOptional, Max, Min, IsString } from 'class-validator';
 
 export class ListCourseQuerySto {
     @IsOptional()
@@ -14,4 +14,19 @@ export class ListCourseQuerySto {
     @IsInt()
     @Min(1)
     page: number = 1;
+
+    @IsOptional()
+    @IsString()
+    @IsIn(['Beginner', 'Intermediate', 'Advanced'])
+    level?: string;
+
+    @IsOptional()
+    @Type(() => Number)
+    @Min(0)
+    minPrice?: number;
+
+    @IsOptional()
+    @Type(() => Number)
+    @Min(0)
+    maxPrice?: number;
 }

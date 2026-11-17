@@ -21,14 +21,27 @@ export class CourseService {
   }
 
   async findAll(query: ListCourseQuerySto) {
+
+    const filter: Record<string, any> = {}
+
+    if(query.level){
+      filter.level = query.level;
+    }
+
+    if(query.maxPrice !== undefined || query.minPrice !== undefined){
+      filter.price = {}
+      if(query.maxPrice !== undefined) filter.price.$lte = query.maxPrice;
+      if(query.minPrice !== undefined) filter.price.$gte = query.minPrice;
+    }
+
     const { page, limit } = query;
     const skip = (page - 1) * limit;          // with offset: const skip = query.offset;
 
     const [data, totalCount] = await Promise.all([
-      this.courseModel.find().sort({ _id: 1 }).skip(skip).limit(limit).exec(),  
-      this.courseModel.countDocuments().exec(),
+      this.courseModel.find(filter).sort({ _id: 1 }).skip(skip).limit(limit).exec(),  
+      this.courseModel.countDocuments(filter).exec(),
     ])
-
+    
     return {
       data,
       meta: {
