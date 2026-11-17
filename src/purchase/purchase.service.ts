@@ -69,7 +69,7 @@ export class PurchaseService {
   }
 
   findMine(userId: string) {
-    return this.purchaseModel.find({ user: userId }).sort({ createdAt: -1 }).exec();
+    return this.purchaseModel.find({ user: userId, status: PurchaseStatus.PAID }).sort({ createdAt: -1 }).exec();
   }
 
   private replay(existing: PurchaseDocument, courseId: string) {
