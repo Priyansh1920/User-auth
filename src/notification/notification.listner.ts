@@ -3,6 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { UserService } from '../user/user.service.js';
 import { MailService } from './mail.service.js';
 import { PURCHASE_PAID, type PurchasePaidEvent } from '../purchase/events/purchase-paid.event.js';
+import { USER_REGISTERED, type UserRegisteredEvent } from '../auth/events/user-registered.event.js';
 
 @Injectable()
 export class NotificationListner {
@@ -29,4 +30,18 @@ export class NotificationListner {
             this.logger.error(`Error sending purchase confirmation for ${e.userId}:`, err);
         }
     }
+
+    @OnEvent(USER_REGISTERED)
+    async onUserRegistered(e: UserRegisteredEvent){
+        try{
+            await this.mail.send(
+                e.email,
+                'Welcome to EduShare',
+                `Hi ${e.fname}, you have been registered as a ${e.role}.`
+            );
+        } catch(err){
+            this.logger.error(`Error sending welcome email for ${e.email}:`, err);
+        }
+    }
+    
 }
