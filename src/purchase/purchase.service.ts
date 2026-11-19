@@ -5,6 +5,8 @@ import { Course } from '../course/schemas/course.schema.js';
 import { PaymentService } from './payment.service.js';
 import { CreatePurchaseDto } from './dto/create-purchase.dto.js';
 import { Purchase, PurchaseDocument, PurchaseStatus } from './schemas/purchase.schema.js';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { PURCHASE_PAID, PurchasePaidEvent } from './events/purchase-paid.event.js';
 
 const DUPLICATE_KEY_CODE = 11000;
 
@@ -14,9 +16,10 @@ export class PurchaseService {
     @InjectModel(Purchase.name) private purchaseModel: Model<Purchase>,
     @InjectModel(Course.name) private courseModel: Model<Course>,
     private readonly paymentService: PaymentService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async purchase(userId: string, dto: CreatePurchaseDto, idempotencyKey: string) {
+  async purchase(userId: string, dto: CreatePurchaseDto, idempotencyKey: string, tokenEmail: string) {
     const course = await this.courseModel.findOne({ name: dto.courseName }).exec();
     if (!course) {
       throw new NotFoundException('Course not found');
@@ -65,11 +68,21 @@ export class PurchaseService {
     purchase.paymentReference = result.reference;
     await purchase.save();
 
+    if(purchase.status === PurchaseStatus.PAID){
+      this.eventEmitter.emit(PURCHASE_PAID, {
+        userId, 
+        tokenEmail,
+        courseName: course.name,
+        amount: purchase.amount,
+        paymentReference: purchase.paymentReference,
+      } satisfies PurchasePaidEvent);
+    }
+
     return { purchase, replayed: false };
   }
 
   findMine(userId: string) {
-    return this.purchaseModel.find({ user: userId }).sort({ createdAt: -1 }).exec();
+    return this.purchaseModel.find({ user: userId, status: PurchaseStatus.PAID }).sort({ createdAt: -1 }).exec();
   }
 
   private replay(existing: PurchaseDocument, courseId: string) {
