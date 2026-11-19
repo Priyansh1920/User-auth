@@ -16,7 +16,7 @@ import { CreatePurchaseDto } from './dto/create-purchase.dto.js';
 import { PurchaseService } from './purchase.service.js';
 import { UserThrottlerGuard } from './user-throttler.guard.js';
 
-type AuthRequest = Request & { user: { sub: string } };
+type AuthRequest = Request & { user: { sub: string, email: string, } };
 
 @Controller('purchases')
 @UseGuards(AuthGaurd, UserThrottlerGuard) // order matters: auth first, so the throttler knows the user
@@ -40,6 +40,7 @@ export class PurchaseController {
       req.user.sub,
       dto,
       idempotencyKey,
+      req.user.email,
     );
 
     if (replayed) {

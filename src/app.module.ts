@@ -8,6 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { CourseModule } from './course/course.module.js';
 import { PurchaseModule } from './purchase/purchase.module.js';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { NotificationModule } from './notification/notification.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -26,6 +28,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     UserModule,
     CourseModule,
     PurchaseModule,
+    EventEmitterModule.forRoot(),
+    NotificationModule
   ],
   controllers: [AppController],
   providers: [AppService],
