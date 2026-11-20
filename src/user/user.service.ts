@@ -15,8 +15,7 @@ export class UserService {
     ){}
     async createUser(userDto: registerUserDto){
 
-        const adminSuffix = this.config.getOrThrow<string>('ADMIN').toLowerCase();
-        const role = userDto.email.toLowerCase().endsWith(adminSuffix) ? Role.ADMIN : Role.STUDENT;
+        const role = Role.STUDENT;
 
         try{
             return await this.userModel.create({
