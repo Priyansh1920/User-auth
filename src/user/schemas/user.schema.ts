@@ -20,6 +20,9 @@ export class User {
 
   @Prop({default : Role.STUDENT})
   role: string;
+
+  @Prop({default: false})
+  isVerified: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
