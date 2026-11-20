@@ -26,7 +26,6 @@ export class AuthService {
         this.eventEmitter.emit(USER_REGISTERED, {
             email: user.email,
             fname: user.fname,
-            role: user.role,
         } satisfies UserRegisteredEvent);
 
         const payload = {sub: user._id, email: user.email, role: user.role};
