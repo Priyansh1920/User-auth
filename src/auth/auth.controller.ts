@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, Request, UseGuards, Query, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { registerUserDto } from './dto/registerUser.dto.js';
 import { loginUser } from './dto/loginUser.dto.js';
@@ -16,9 +16,13 @@ export class AuthController {
     // and we will put logic in service file 
     @Post('register')
     async register(@Body() UsersDto: registerUserDto){
+        return await this.authService.registerUser(UsersDto);
+    }
 
-        const token = await this.authService.registerUser(UsersDto);
-        return {access_token: token}
+    @Get('verify')
+    async verify(@Query('token') token: string){
+        if (!token) throw new BadRequestException('Token is required');
+        return this.authService.verifyEmail(token);
     }
 
     @Post('login')

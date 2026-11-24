@@ -14,8 +14,6 @@ export class UserService {
     ){}
     async createUser(userDto: registerUserDto){
 
-        const role = Role.STUDENT;
-
         try{
             return await this.userModel.create({
             fname: userDto.fname,

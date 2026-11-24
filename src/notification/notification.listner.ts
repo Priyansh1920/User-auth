@@ -36,8 +36,8 @@ export class NotificationListner {
         try{
             await this.mail.send(
                 e.email,
-                'Welcome to EduShare',
-                `Hi ${e.fname}, you have been registered as a ${e.role}.`
+                'Verify your email',
+                `Hi ${e.fname}, confirm your email by opening this link (valid for 24 hours):\n${e.verifyUrl}`,
             );
         } catch(err){
             this.logger.error(`Error sending welcome email for ${e.email}:`, err);
