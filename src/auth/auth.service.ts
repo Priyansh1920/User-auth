@@ -57,6 +57,7 @@ export class AuthService {
         if(!user){
             throw new BadRequestException('Invalid or expired verification link');
         }
+        return {message:"Email verified successfully"};
         
     }
 

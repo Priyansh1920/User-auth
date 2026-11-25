@@ -10,6 +10,8 @@ import { CourseModule } from './course/course.module.js';
 import { PurchaseModule } from './purchase/purchase.module.js';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NotificationModule } from './notification/notification.module.js';
+import { BullModule } from '@nestjs/bullmq';
+import { ConfigService  } from '@nestjs/config';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -21,6 +23,15 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appKey: 'YOUR_APP_KEY',
       appSecret: 'YOUR_APP_SECRET',
       serviceId: 'sample-nest',
+    }),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        connection: {
+          host: config.getOrThrow<string>('REDIS_HOST'),
+          port: Number(config.getOrThrow('REDIS_PORT')),
+        },
+      }),
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGODB_URL as string),
